@@ -1,4 +1,5 @@
 class Item < ApplicationRecord
+  include AASM
 
   validates :title, presence: true
   validates_uniqueness_of :sort_index, scope: :todo_id
@@ -7,6 +8,15 @@ class Item < ApplicationRecord
   before_validation :set_sort_index
 
   scope :sort_by_index, ->() {order(:sort_index)}
+
+  aasm skip_validation_on_save: true do
+    state :pending, initial: true
+    state :completed
+
+    event :complete do
+      transitions from: :pending, to: :completed
+    end
+  end
 
   private
   # set sort_index if not specified
