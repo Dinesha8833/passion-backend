@@ -29,5 +29,17 @@ module Passion
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # CORS Settings
+    config.middleware.use Rack::Cors do
+      allow do
+        # TODO: whitelist the domain here.
+        origins '*'
+        resource '*',
+          :headers => :any,
+          :expose  => ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+          :methods => [:get, :post, :options, :delete, :put, :patch]
+      end
+    end
   end
 end
