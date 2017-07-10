@@ -1,6 +1,6 @@
 class Api::V1::ItemsController < Api::V1::BaseController
   before_action :set_todo
-  before_action :set_item, only: [:update, :complete, :destroy]
+  before_action :set_item, only: [:update, :complete, :set_order, :destroy]
 
   # GET /api/v1/todos/:todo_id/items
   def index
@@ -29,6 +29,15 @@ class Api::V1::ItemsController < Api::V1::BaseController
   # PATCH /api/v1/todos/:todo_id/items/:id/complete
   def complete
     if @item.complete!
+      render json: @item
+    else
+      render_error_with_message(@item.errors.full_messages.join(', '), :bad_request)
+    end
+  end
+
+  # PATCH /api/v1/todos/:todo_id/items/:id/set_order
+  def set_order
+    if @item.set_order(params[:item][:sort_index])
       render json: @item
     else
       render_error_with_message(@item.errors.full_messages.join(', '), :bad_request)

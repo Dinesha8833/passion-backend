@@ -18,6 +18,24 @@ class Item < ApplicationRecord
     end
   end
 
+  def set_order(index)
+    index_exist = todo.items.where(sort_index: index).where.not(id: id).first
+    if index_exist
+      begin
+        transaction do
+          items = todo.items.where(sort_index: index..Float::INFINITY).order('sort_index desc')
+          move_index_up(items)
+          update_attribute(:sort_index, index)
+        end
+      rescue Exception => e
+        self.errors.add(:base, e.message)
+        return false
+      end
+    else
+      update_attribute(:sort_index, index)
+    end
+  end
+
   private
   # set sort_index if not specified
   def set_sort_index
@@ -27,5 +45,11 @@ class Item < ApplicationRecord
   # TODO: improve this logic
   def next_sort_index
     (todo.items.map(&:sort_index).max rescue 0) + 1
+  end
+
+  def move_index_up(items)
+    items.each do |item|
+      item.update_attribute(:sort_index, item.sort_index + 1)
+    end
   end
 end
