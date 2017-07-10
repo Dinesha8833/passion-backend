@@ -1,5 +1,4 @@
-class Api::V1::ItemsController < ApplicationController
-  before_action :authenticate_user!
+class Api::V1::ItemsController < Api::V1::BaseController
   before_action :set_todo
   before_action :set_item, only: [:update, :complete, :destroy]
 
@@ -14,10 +13,7 @@ class Api::V1::ItemsController < ApplicationController
     if @item.save
       render json: @item
     else
-      render json: {
-        success: false,
-        message: @item.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@item.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -26,10 +22,7 @@ class Api::V1::ItemsController < ApplicationController
     if @item.update_attributes(item_params)
       render json: @item
     else
-      render json: {
-        success: false,
-        message: @item.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@item.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -38,10 +31,7 @@ class Api::V1::ItemsController < ApplicationController
     if @item.complete!
       render json: @item
     else
-      render json: {
-        success: false,
-        message: @item.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@item.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -50,10 +40,7 @@ class Api::V1::ItemsController < ApplicationController
     if @item.delete
       render json: @item
     else
-      render json: {
-        success: false,
-        message: @item.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@item.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -61,20 +48,14 @@ class Api::V1::ItemsController < ApplicationController
   def set_todo
     @todo = current_user.todos.where(id: params[:todo_id]).first
     unless @todo
-      render json: {
-        success: false,
-        message: "Either todo does not exist or you dont have access to it"
-      }
+      render_error_with_message("Either todo does not exist or you dont have access to it", :not_found)
     end
   end
 
   def set_item
     @item = @todo.items.where(id: params[:id]).first
     unless @item
-      render json: {
-        success: false,
-        message: "Either item does not exist or you dont have access to it"
-      }
+      render_error_with_message("Either item does not exist or you dont have access to it", :not_found)
     end
   end
 

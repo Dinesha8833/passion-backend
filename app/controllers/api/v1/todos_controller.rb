@@ -1,5 +1,4 @@
-class Api::V1::TodosController < ApplicationController
-  before_action :authenticate_user!
+class Api::V1::TodosController < Api::V1::BaseController
   before_action :set_todo, only: [:update, :destroy]
 
   # GET /api/v1/todos
@@ -13,10 +12,7 @@ class Api::V1::TodosController < ApplicationController
     if @todo.save
       render json: @todo
     else
-      render json: {
-        success: false,
-        message: @todo.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@todo.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -25,10 +21,7 @@ class Api::V1::TodosController < ApplicationController
     if @todo.update(todo_params)
       render json: @todo
     else
-      render json: {
-        success: false,
-        message: @todo.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@todo.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -37,10 +30,7 @@ class Api::V1::TodosController < ApplicationController
     if @todo.delete
       render json: @todo
     else
-      render json: {
-        success: false,
-        message: @todo.errors.full_messages.join(', ')
-      }
+      render_error_with_message(@todo.errors.full_messages.join(', '), :bad_request)
     end
   end
 
@@ -48,10 +38,7 @@ class Api::V1::TodosController < ApplicationController
   def set_todo
     @todo = current_user.todos.where(id: params[:id]).first
     unless @todo
-      render json: {
-        success: false,
-        message: "Either todo does not exist or you dont have access to it"
-      }
+      render_error_with_message("Either todo does not exist or you dont have access to it", :not_found)
     end
   end
 
