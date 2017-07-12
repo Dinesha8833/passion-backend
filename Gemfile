@@ -25,10 +25,6 @@ gem 'puma', '~> 3.7'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
-# Use Devise Token Auth for token based authentication
-gem 'devise_token_auth'
-gem 'omniauth'
-
 # Use State Machine for maintaing the state of Todo Item
 gem 'aasm'
 

@@ -55,7 +55,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   private
   def set_todo
-    @todo = current_user.todos.where(id: params[:todo_id]).first
+    @todo = Todo.where(id: params[:todo_id]).first
     unless @todo
       render_error_with_message("Either todo does not exist or you dont have access to it", :not_found)
     end

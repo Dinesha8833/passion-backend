@@ -3,12 +3,12 @@ class Api::V1::TodosController < Api::V1::BaseController
 
   # GET /api/v1/todos
   def index
-    render json: current_user.todos
+    render json: Todo.all
   end
 
   # POST /api/v1/todos
   def create
-    @todo = current_user.todos.build(todo_params)
+    @todo = Todo.build(todo_params)
     if @todo.save
       render json: @todo
     else
@@ -36,7 +36,7 @@ class Api::V1::TodosController < Api::V1::BaseController
 
   private
   def set_todo
-    @todo = current_user.todos.where(id: params[:id]).first
+    @todo = Todo.where(id: params[:id]).first
     unless @todo
       render_error_with_message("Either todo does not exist or you dont have access to it", :not_found)
     end
