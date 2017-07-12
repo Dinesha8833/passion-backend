@@ -4,7 +4,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   # GET /api/v1/todos/:todo_id/items
   def index
-    render json: @todo.items.sort_by_index
+    render json: @todo.items.sort_by_index.paginate(:page => params[:page])
   end
 
   # POST /api/v1/todos/:todo_id/items

@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   include AASM
+  self.per_page = 10
 
   validates :title, presence: true
   validates_uniqueness_of :sort_index, scope: :todo_id

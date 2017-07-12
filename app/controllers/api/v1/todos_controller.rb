@@ -3,7 +3,7 @@ class Api::V1::TodosController < Api::V1::BaseController
 
   # GET /api/v1/todos
   def index
-    render json: Todo.all
+    render json: Todo.paginate(:page => params[:page])
   end
 
   # POST /api/v1/todos
