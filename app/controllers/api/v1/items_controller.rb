@@ -28,6 +28,7 @@ class Api::V1::ItemsController < Api::V1::BaseController
 
   # PATCH /api/v1/todos/:todo_id/items/:id/complete
   def complete
+    render_error_with_message("Item is already completed", :bad_request) and return if @item.completed?
     if @item.complete!
       render json: @item
     else

@@ -8,7 +8,7 @@ class Api::V1::TodosController < Api::V1::BaseController
 
   # POST /api/v1/todos
   def create
-    @todo = Todo.build(todo_params)
+    @todo = Todo.new(todo_params)
     if @todo.save
       render json: @todo
     else
